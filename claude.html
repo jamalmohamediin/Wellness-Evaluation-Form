@@ -6,9 +6,27 @@
   <title>Claude Template</title>
   <!-- Tailwind CDN to preserve original styling intent -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; }
+    .muscle-section { font-size: 10px; line-height: 1.3; }
+    .rating-box { border: 2px solid #a00; padding: 5px; margin: 5px 0; }
+    .rating-columns { display: flex; justify-content: space-between; gap: 8px; }
+    .col-red { color: #a00; font-weight: bold; }
+    .col-green { color: green; font-weight: bold; }
+    .col-black { color: black; font-weight: bold; }
+    table.eval-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+    table.eval-table th, table.eval-table td { border: 1px solid #000; text-align: center; padding: 4px; }
+    .bg-grey { background: #d9d9d9; font-weight: bold; }
+    .bg-excellent { background: #ffff99; }
+    .bg-good { background: #ffcc99; }
+    .bg-medium { background: #ff9966; }
+    .bg-bad { background: #ff6666; }
+    .bg-alarming { background: #cc0000; color: white; }
+  </style>
 </head>
 <body class="bg-gray-100">
   <div id="root"></div>
   <script type="module" src="/src/claude.jsx"></script>
 </body>
 </html>
+

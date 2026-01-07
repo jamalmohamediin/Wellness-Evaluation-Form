@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Download } from "lucide-react";
+import bodyFatRangeIcon from "../SAMPLES/ICONS/Body_Fat_Range_Icon-removebg-preview.png";
+import bodyWaterRangeIcon from "../SAMPLES/ICONS/Body_Water_Range_Icon-removebg-preview.png";
+import muscleMassIcon from "../SAMPLES/ICONS/Muscle_Mass_Icon-removebg-preview.png";
+import physiqueRatingsIcon from "../SAMPLES/ICONS/BMR_Icon-removebg-preview.png";
+import basalMetabolicAgeIcon from "../SAMPLES/ICONS/Basal_Metabolic_Age_Icon-removebg-preview.png";
+import boneMassIcon from "../SAMPLES/ICONS/Bone_Mass_Icon-removebg-preview.png";
+import visceralFatIcon from "../SAMPLES/ICONS/Visceral_Fat_Icon-removebg-preview.png";
 
 const WellnessForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,14 +99,30 @@ const WellnessForm = () => {
               <div className="grid grid-cols-11 text-xs border-b border-black bg-gray-50">
                 <div className="border-r border-black p-1 text-center text-xs">Your next<br/>appoint-<br/>ment</div>
                 <div className="border-r border-black p-1 text-center">Weight<br/>KG</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">👤</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">💧</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">💪</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">🏋️</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">🔥</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">📅</div>
-                <div className="border-r border-black p-1 flex justify-center items-center text-2xl">🦴</div>
-                <div className="p-1 flex justify-center items-center text-2xl">🫃</div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={bodyFatRangeIcon} alt="Body fat range" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={bodyWaterRangeIcon} alt="Body water range" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={muscleMassIcon} alt="Muscle mass" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={physiqueRatingsIcon} alt="Physique ratings" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={basalMetabolicAgeIcon} alt="Basal metabolic rate" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={basalMetabolicAgeIcon} alt="Basal metabolic age" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="border-r border-black p-1 flex justify-center items-center">
+                  <img src={boneMassIcon} alt="Bone mass" className="h-9 w-9 object-contain" />
+                </div>
+                <div className="p-1 flex justify-center items-center">
+                  <img src={visceralFatIcon} alt="Visceral fat" className="h-9 w-9 object-contain" />
+                </div>
               </div>
 
               {/* Data Rows */}
@@ -120,33 +143,29 @@ const WellnessForm = () => {
               ))}
 
               {/* Evaluation Section */}
-              <div className="mt-2">
-                <div className="grid grid-cols-6 text-xs">
-                  <div className="border border-black p-2 font-bold bg-gray-300">Evaluation</div>
-                  <div className="border border-black p-2 text-center font-semibold bg-yellow-300">excellent</div>
-                  <div className="border border-black p-2 text-center font-semibold bg-white">good</div>
-                  <div className="border border-black p-2 text-center font-semibold bg-white">medium</div>
-                  <div className="border border-black p-2 text-center font-semibold bg-white">bad</div>
-                  <div className="border border-black p-2 text-center font-semibold bg-red-300">alarming</div>
-                </div>
-                
-                {['Body Fat', 'Body Water', 'Muscle Mass', 'Visceral Fat', 'Questionnaire'].map((item, idx) => {
-                  const key = item.replace(' ', '').charAt(0).toLowerCase() + item.replace(' ', '').slice(1);
-                  return (
-                    <div key={idx} className="grid grid-cols-6 text-xs">
-                      <div className="border border-black p-2 bg-yellow-300 font-semibold">{item}</div>
-                      {['excellent', 'good', 'medium', 'bad', 'alarming'].map((level, levelIdx) => (
-                        <div key={level} className={`border border-black p-2 text-center ${levelIdx === 0 ? 'bg-yellow-300' : levelIdx === 4 ? 'bg-red-300' : 'bg-white'}`}>
-                          <input 
-                            type="checkbox" 
-                            checked={evaluation[key] === level}
-                            onChange={() => setEvaluation({...evaluation, [key]: level})}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })}
+              <div className="mt-2 text-xs">
+                <table className="eval-table">
+                  <tbody>
+                    <tr>
+                      <th className="bg-grey" style={{ width: '25%', textAlign: 'left', paddingLeft: '10px' }}>Evaluation</th>
+                      <th className="bg-excellent">Excellent</th>
+                      <th className="bg-good">Good</th>
+                      <th className="bg-medium">Medium</th>
+                      <th className="bg-bad">Bad</th>
+                      <th className="bg-alarming">Alarming</th>
+                    </tr>
+                    {['Body Fat','Body Water','Muscle Mass','Visceral Fat','Questionnaire'].map(label => (
+                      <tr key={label}>
+                        <td className="bg-grey">{label}</td>
+                        <td className="bg-excellent"><input type="checkbox" /></td>
+                        <td className="bg-good"><input type="checkbox" /></td>
+                        <td className="bg-medium"><input type="checkbox" /></td>
+                        <td className="bg-bad"><input type="checkbox" /></td>
+                        <td className="bg-alarming"><input type="checkbox" /></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -155,7 +174,7 @@ const WellnessForm = () => {
               {/* Body Fat Range Table */}
               <div className="border-2 border-black mb-3">
                 <div className="bg-gray-200 p-2 font-bold flex items-center gap-2 text-sm">
-                  <span className="text-2xl">👤</span>
+                  <img src={bodyFatRangeIcon} alt="Body fat range" className="h-9 w-9 object-contain" />
                   <span>Body Fat Range:</span>
                 </div>
                 
@@ -167,14 +186,14 @@ const WellnessForm = () => {
                       <th className="border-r border-black p-1" colSpan="4">Men</th>
                     </tr>
                     <tr className="border-b border-black">
-                      <th className="border-r border-black p-1 bg-yellow-200">excellent</th>
-                      <th className="border-r border-black p-1">healthy</th>
-                      <th className="border-r border-black p-1">medium</th>
-                      <th className="border-r border-black p-1">obese</th>
-                      <th className="border-r border-black p-1 bg-yellow-200">excellent</th>
-                      <th className="border-r border-black p-1">healthy</th>
-                      <th className="border-r border-black p-1">medium</th>
-                      <th className="p-1">obese</th>
+                      <th className="border-r border-black p-1 bg-yellow-200">Excellent</th>
+                      <th className="border-r border-black p-1">Healthy</th>
+                      <th className="border-r border-black p-1">Medium</th>
+                      <th className="border-r border-black p-1">Obese</th>
+                      <th className="border-r border-black p-1 bg-yellow-200">Excellent</th>
+                      <th className="border-r border-black p-1">Healthy</th>
+                      <th className="border-r border-black p-1">Medium</th>
+                      <th className="p-1">Obese</th>
                     </tr>
                     <tr className="border-b border-black bg-yellow-200">
                       <th className="border-r border-black p-1 text-left">Age</th>
@@ -232,7 +251,7 @@ const WellnessForm = () => {
               {/* Water Index */}
               <div className="border-2 border-black mb-3">
                 <div className="bg-gray-200 p-2 font-bold flex items-center gap-2 text-sm">
-                  <span className="text-2xl">💧</span>
+                  <img src={bodyWaterRangeIcon} alt="Body water range" className="h-9 w-9 object-contain" />
                   <span>Water Index:</span>
                 </div>
                 <div className="p-3">
@@ -267,42 +286,38 @@ const WellnessForm = () => {
                 </div>
               </div>
 
-              {/* Muscle Index */}
+                            {/* Muscle Index */}
               <div className="border-2 border-black">
                 <div className="bg-gray-200 p-2 font-bold flex items-center gap-2 text-sm">
-                  <span className="text-2xl">💪</span>
+                  <img src={muscleMassIcon} alt="Muscle mass" className="h-9 w-9 object-contain" />
                   <span>Muscle Index & Physique Ratings:</span>
                 </div>
-                <div className="p-3 text-xs">
-                  <p className="mb-2 leading-tight">The Muscle Index is given in kg, the value belonging to it is the Physique Ratings:</p>
-                  
-                  <div className="grid grid-cols-3 mb-2 border border-black">
-                    <div className="bg-red-200 p-2 border-r border-black font-bold text-center">obese, untrained</div>
-                    <div className="bg-white p-2 border-r border-black text-center font-bold">normal</div>
-                    <div className="bg-yellow-300 p-2 text-center font-bold">excellent</div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 text-xs mb-3">
-                    <div className="leading-relaxed">
-                      <div><span className="font-bold">1</span> Hidden Obese</div>
-                      <div><span className="font-bold">2</span> Obese</div>
-                      <div><span className="font-bold">3</span> Solidly-built</div>
-                    </div>
-                    <div className="leading-relaxed">
-                      <div><span className="font-bold">4</span> Under-exercised</div>
-                      <div><span className="font-bold">5</span> Standard</div>
-                      <div><span className="font-bold">6</span> Standard Muscular</div>
-                    </div>
-                    <div className="leading-relaxed">
-                      <div><span className="font-bold">7</span> Thin</div>
-                      <div><span className="font-bold">8</span> Thin & muscular</div>
-                      <div><span className="font-bold">9</span> Very muscular</div>
+                <div className="p-3 text-xs muscle-section">
+                  <p className="mb-2">The Muscle Index is given in Kg, the value belonging to it is the Physique Ratings:</p>
+                  <div className="rating-box">
+                    <div className="rating-columns">
+                      <div className="col-red">
+                        <div style={{ borderBottom: '1px solid #000', marginBottom: '2px' }}>Obese, Untrained</div>
+                        1 Hidden Obese<br/>
+                        2 Obese<br/>
+                        3 Solidly-built
+                      </div>
+                      <div className="col-green">
+                        <div style={{ borderBottom: '1px solid #000', marginBottom: '2px' }}>Normal</div>
+                        4 Under exercised<br/>
+                        5 Standard<br/>
+                        6 Standard Muscular
+                      </div>
+                      <div className="col-black" style={{ color: '#a00' }}>
+                        <div style={{ borderBottom: '1px solid #000', marginBottom: '2px' }}>Excellent</div>
+                        7 Thin<br/>
+                        8 Thin & muscular<br/>
+                        9 Very muscular
+                      </div>
                     </div>
                   </div>
-
-                  <div className="text-xs leading-tight">
-                    <p className="font-bold mb-1">Why is monitoring Muscle Mass important?</p>
-                    <p>For every extra KG of muscle gained the body uses approximately 100 extra calories a day. Every body who experiences a change in the muscle mass should monitor and adapt the calorie intake accordingly. Because muscle is denser than fat, monitoring your muscle mass gives you a more accurate understanding of your overall body compositions and changes in your total body weight.</p>
+                  <div style={{ fontSize: '9px', textAlign: 'justify' }}>
+                    <strong>Why is monitoring Muscle Mass important?</strong> For every extra Kg of muscle gained the body uses approximately 100 extra calories a day. Everybody who experiences a change in the muscle mass should monitor and adapt the calorie intake accordingly. Because muscle is denser than fat, monitoring your muscle mass gives you a more accurate understanding of your overall body compositions and changes in your total body weight.
                   </div>
                 </div>
               </div>
@@ -319,7 +334,7 @@ const WellnessForm = () => {
             <div className="p-4 text-xs leading-relaxed">
               <div className="mb-4">
                 <div className="flex items-start gap-2 mb-3">
-                  <span className="text-2xl">🏋️</span>
+                  <img src={physiqueRatingsIcon} alt="Physique ratings" className="h-9 w-9 object-contain mt-0.5" />
                   <div>
                     <p className="font-bold mb-1">What is Physique Rating?</p>
                     <p>Offers you the opportunity to set a desired Physique Rating from which you can tailor your health/fitness programme accordingly</p>
@@ -330,7 +345,7 @@ const WellnessForm = () => {
                 <p className="mb-3">When a person increases their activity level their weight may not change but their balance of body fat and muscle may alter which will change the overall physique or body shape. The physique rating helps accurately guide through a diet and fitness programme</p>
 
                 <div className="flex items-start gap-2 mb-3">
-                  <span className="text-2xl">🔥</span>
+                  <img src={basalMetabolicAgeIcon} alt="Basal metabolic rate" className="h-9 w-9 object-contain mt-0.5" />
                   <div>
                     <p className="font-bold mb-1">What is Basal Metabolic Rate Indicator?</p>
                     <p>The Basal Metabolic Rate (BMR) is the number of calories the body needs when at rest.</p>
@@ -341,7 +356,7 @@ const WellnessForm = () => {
                 <p className="mb-3">Understanding the Basal Metabolic Rate will allow you to monitor the number of calories your body requires according to your Physique and lifestyle. The more muscle or general activity you take the more calories you require. The Basal Metabolic Rate level also decreases as the body ages</p>
 
                 <div className="flex items-start gap-2 mb-3">
-                  <span className="text-2xl">📅</span>
+                  <img src={basalMetabolicAgeIcon} alt="Basal metabolic age" className="h-9 w-9 object-contain mt-0.5" />
                   <div>
                     <p className="font-bold mb-1">What is Metabolic Age Rating?</p>
                     <p>Basal Metabolic Rate starts to decrease after the age of 16/17 years old. Your Metabolic Age Rating indicates what age level your body is currently rated at</p>
@@ -354,7 +369,7 @@ const WellnessForm = () => {
 
               <div className="mb-4">
                 <div className="flex items-start gap-2 mb-2">
-                  <span className="text-2xl">🦴</span>
+                  <img src={boneMassIcon} alt="Bone mass" className="h-9 w-9 object-contain mt-0.5" />
                   <div className="font-bold">Bone Mass:</div>
                 </div>
                 
@@ -392,22 +407,22 @@ const WellnessForm = () => {
 
               <div>
                 <div className="flex items-start gap-2 mb-2">
-                  <span className="text-2xl">🫃</span>
+                  <img src={visceralFatIcon} alt="Visceral fat" className="h-9 w-9 object-contain mt-0.5" />
                   <div className="font-bold">Visceral Fat:</div>
                 </div>
                 
                 <div className="mb-2 text-xs">
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <span className="font-bold">1—4</span>
+                      <span className="font-bold">1-4</span>
                       <span className="ml-4">excellent</span>
                     </div>
                     <div>
-                      <span className="font-bold">5—8</span>
+                      <span className="font-bold">5-8</span>
                       <span className="ml-4 text-gray-400">healthy</span>
                     </div>
                     <div>
-                      <span className="font-bold text-red-600">9—12</span>
+                      <span className="font-bold text-red-600">9-12</span>
                       <span className="ml-4 text-red-600">bad</span>
                     </div>
                     <div>
