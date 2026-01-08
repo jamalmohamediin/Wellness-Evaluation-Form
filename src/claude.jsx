@@ -12,7 +12,7 @@ import wellnessLogo from "../SAMPLES/LOGO-removebg-preview.png";
 
 const WellnessForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [appointments, setAppointments] = useState(Array(20).fill({
+  const [appointments, setAppointments] = useState(Array(28).fill({
     age: '', height: '', weight: '', bodyFat: '', water: '', muscle: '', 
     physique: '', bmr: '', basal: '', bone: '', visceral: ''
   }));
@@ -82,7 +82,7 @@ const WellnessForm = () => {
         <div className="max-w-7xl mx-auto bg-white shadow-lg p-6 page-break">
           <div className="grid grid-cols-2 gap-4">
             {/* Left Section */}
-            <div className="border-2 border-black">
+            <div className="border-2 border-black flex flex-col">
               <div className="border-b-2 border-black p-2 font-bold text-center text-sm">
                 Please bring along this Pass to your next appointment
               </div>
@@ -134,7 +134,7 @@ const WellnessForm = () => {
               </div>
 
               {/* Data Rows */}
-              {appointments.slice(0, 20).map((apt, idx) => (
+              {appointments.slice(0, 28).map((apt, idx) => (
                 <div key={idx} className="grid grid-cols-11 text-xs border-b border-gray-300">
                   <input className="border-r border-black p-0.5 text-center w-full text-xs" value={apt.age} onChange={(e) => updateAppointment(idx, 'age', e.target.value)} />
                   <input className="border-r border-black p-0.5 text-center w-full text-xs" value={apt.height} onChange={(e) => updateAppointment(idx, 'height', e.target.value)} />
@@ -151,7 +151,7 @@ const WellnessForm = () => {
               ))}
 
               {/* Evaluation Section */}
-              <div className="mt-32 text-xs">
+              <div className="mt-auto mb-[4px] text-xs">
                 <table className="eval-table w-full" style={{ tableLayout: 'fixed' }}>
                   <colgroup>
                     <col style={{ width: '16.66%' }} />
