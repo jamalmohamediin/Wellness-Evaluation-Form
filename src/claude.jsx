@@ -8,6 +8,7 @@ import physiqueRatingsIcon from "../SAMPLES/ICONS/BMR_Icon-removebg-preview.png"
 import basalMetabolicAgeIcon from "../SAMPLES/ICONS/Basal_Metabolic_Age_Icon-removebg-preview.png";
 import boneMassIcon from "../SAMPLES/ICONS/Bone_Mass_Icon-removebg-preview.png";
 import visceralFatIcon from "../SAMPLES/ICONS/Visceral_Fat_Icon-removebg-preview.png";
+import wellnessLogo from "../SAMPLES/LOGO-removebg-preview.png";
 
 const WellnessForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,14 +37,19 @@ const WellnessForm = () => {
     setAppointments(newAppointments);
   };
 
-  const bodyFatData = [
-    { age: '18-39', women: { excellent: '< 21.0', healthy: '21.0 - 24.9', medium: '25.0 - 29.9', obese: '> 30.0' }, men: { excellent: '< 8.0', healthy: '8.0 - 14.9', medium: '15.0 - 19.0', obese: '> 20.1' } },
-    { age: '40-59', women: { excellent: '< 23.0', healthy: '23.0 - 27.9', medium: '28.0 - 32.9', obese: '> 33.0' }, men: { excellent: '< 11.0', healthy: '11.0 - 17.9', medium: '18.0 - 22.9', obese: '> 23.0' } },
-    { age: '60-79', women: { excellent: '< 24.0', healthy: '24.0 - 29.9', medium: '30.0 - 34.9', obese: '> 35.0' }, men: { excellent: '< 13.0', healthy: '13.0 - 19.9', medium: '20.0 - 24.9', obese: '> 25.0' } },
-  ];
-
   const exportToPDF = () => {
     window.print();
+  };
+
+  const formatDateToDisplay = (date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const monthName = date.toLocaleString("en-US", { month: "long" }).toUpperCase();
+    const year = date.getFullYear();
+    return `${day}-${monthName}-${year}`;
+  };
+
+  const setTodayDate = () => {
+    setPage2Data({ ...page2Data, date: formatDateToDisplay(new Date()) });
   };
 
   return (
@@ -64,7 +70,7 @@ const WellnessForm = () => {
         </button>
         <button 
           onClick={exportToPDF}
-          className="bg-green-600 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-green-700"
+          className="bg-[#6b8e23] text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-[#556b2f]"
         >
           <Download size={20} />
           Export as PDF
@@ -84,20 +90,22 @@ const WellnessForm = () => {
               {/* Table Headers */}
               <div className="grid grid-cols-11 text-xs border-b border-black">
                 <div className="border-r border-black p-1 text-center font-semibold">Age:</div>
-                <div className="border-r border-black p-1 text-center font-semibold">Height<br/>cm</div>
-                <div className="border-r border-black p-1 text-center font-semibold">Body Fat<br/>Range</div>
-                <div className="border-r border-black p-1 text-center font-semibold">% Body<br/>Water<br/>Range</div>
-                <div className="border-r border-black p-1 text-center font-semibold">Muscle<br/>Mass</div>
-                <div className="border-r border-black p-1 text-center font-semibold">Physique<br/>Ratings</div>
-                <div className="border-r border-black p-1 text-center font-semibold">BMR</div>
-                <div className="border-r border-black p-1 text-center font-semibold">Basal<br/>metabolic<br/>Age</div>
-                <div className="border-r border-black p-1 text-center font-semibold">Bone<br/>Mass</div>
-                <div className="p-1 text-center font-semibold">Visceral<br/>Fat</div>
+                <div className="border-r border-black p-1 text-center">Height<br/>cm</div>
+                <div className="border-r border-black p-1 text-center">Weight<br/>KG</div>
+                <div className="border-r border-black p-1 text-center">Body Fat<br/>Range</div>
+                <div className="border-r border-black p-1 text-center">% Body<br/>Water<br/>Range</div>
+                <div className="border-r border-black p-1 text-center">Muscle<br/>Mass</div>
+                <div className="border-r border-black p-1 text-center">Physique<br/>Ratings</div>
+                <div className="border-r border-black p-1 text-center">BMR</div>
+                <div className="border-r border-black p-1 text-center">Basal<br/>Metabolic<br/>Age</div>
+                <div className="border-r border-black p-1 text-center">Bone<br/>Mass</div>
+                <div className="p-1 text-center">Visceral<br/>Fat</div>
               </div>
 
               {/* First Row with Icons */}
               <div className="grid grid-cols-11 text-xs border-b border-black bg-gray-50">
                 <div className="border-r border-black p-1 text-center text-xs">Your next<br/>appoint-<br/>ment</div>
+                <div className="border-r border-black p-1 text-center">Height<br/>cm</div>
                 <div className="border-r border-black p-1 text-center">Weight<br/>KG</div>
                 <div className="border-r border-black p-1 flex justify-center items-center">
                   <img src={bodyFatRangeIcon} alt="Body fat range" className="h-9 w-9 object-contain" />
@@ -126,7 +134,7 @@ const WellnessForm = () => {
               </div>
 
               {/* Data Rows */}
-              {appointments.slice(0, 15).map((apt, idx) => (
+              {appointments.slice(0, 20).map((apt, idx) => (
                 <div key={idx} className="grid grid-cols-11 text-xs border-b border-gray-300">
                   <input className="border-r border-black p-0.5 text-center w-full text-xs" value={apt.age} onChange={(e) => updateAppointment(idx, 'age', e.target.value)} />
                   <input className="border-r border-black p-0.5 text-center w-full text-xs" value={apt.height} onChange={(e) => updateAppointment(idx, 'height', e.target.value)} />
@@ -143,16 +151,24 @@ const WellnessForm = () => {
               ))}
 
               {/* Evaluation Section */}
-              <div className="mt-2 text-xs">
-                <table className="eval-table">
+              <div className="mt-32 text-xs">
+                <table className="eval-table w-full" style={{ tableLayout: 'fixed' }}>
+                  <colgroup>
+                    <col style={{ width: '16.66%' }} />
+                    <col style={{ width: '16.66%' }} />
+                    <col style={{ width: '16.66%' }} />
+                    <col style={{ width: '16.66%' }} />
+                    <col style={{ width: '16.66%' }} />
+                    <col style={{ width: '16.66%' }} />
+                  </colgroup>
                   <tbody>
                     <tr>
-                      <th className="bg-grey" style={{ width: '25%', textAlign: 'left', paddingLeft: '10px' }}>Evaluation</th>
-                      <th className="bg-excellent">Excellent</th>
-                      <th className="bg-good">Good</th>
-                      <th className="bg-medium">Medium</th>
-                      <th className="bg-bad">Bad</th>
-                      <th className="bg-alarming">Alarming</th>
+                      <th className="bg-grey font-bold text-left pl-2">Evaluation</th>
+                      <th className="font-normal">Excellent</th>
+                      <th className="font-normal">Good</th>
+                      <th className="font-normal">Medium</th>
+                      <th className="font-normal">Bad</th>
+                      <th className="font-normal">Alarming</th>
                     </tr>
                     {['Body Fat','Body Water','Muscle Mass','Visceral Fat','Questionnaire'].map(label => (
                       <tr key={label}>
@@ -173,76 +189,154 @@ const WellnessForm = () => {
             <div>
               {/* Body Fat Range Table */}
               <div className="border-2 border-black mb-3">
-                <div className="bg-gray-200 p-2 font-bold flex items-center gap-2 text-sm">
+                <div className="p-2 flex items-center gap-2 text-sm font-normal">
                   <img src={bodyFatRangeIcon} alt="Body fat range" className="h-9 w-9 object-contain" />
-                  <span>Body Fat Range:</span>
+                  <span className="font-bold">Body Fat Range:</span>
                 </div>
                 
-                <table className="w-full text-xs border-collapse">
+                <table className="w-full text-[9px] border-collapse text-center mb-2">
                   <thead>
-                    <tr className="border-b border-black">
-                      <th className="border-r border-black p-1" rowSpan="2"></th>
-                      <th className="border-r border-black p-1 bg-yellow-200" colSpan="4">Women</th>
-                      <th className="border-r border-black p-1" colSpan="4">Men</th>
+                    <tr className="font-bold" style={{ background: '#ffff99' }}>
+                      <th className="border border-black p-1" colSpan="4">Women</th>
+                      <th className="border border-black p-1">AGE</th>
+                      <th className="border border-black p-1" colSpan="4">Men</th>
                     </tr>
-                    <tr className="border-b border-black">
-                      <th className="border-r border-black p-1 bg-yellow-200">Excellent</th>
-                      <th className="border-r border-black p-1">Healthy</th>
-                      <th className="border-r border-black p-1">Medium</th>
-                      <th className="border-r border-black p-1">Obese</th>
-                      <th className="border-r border-black p-1 bg-yellow-200">Excellent</th>
-                      <th className="border-r border-black p-1">Healthy</th>
-                      <th className="border-r border-black p-1">Medium</th>
-                      <th className="p-1">Obese</th>
-                    </tr>
-                    <tr className="border-b border-black bg-yellow-200">
-                      <th className="border-r border-black p-1 text-left">Age</th>
-                      <th className="border-r border-black p-1">20 - 24</th>
-                      <th className="border-r border-black p-1">25 - 29</th>
-                      <th className="border-r border-black p-1">30 - 34</th>
-                      <th className="border-r border-black p-1">35 - 39</th>
-                      <th className="border-r border-black p-1">20 - 24</th>
-                      <th className="border-r border-black p-1">25 - 29</th>
-                      <th className="border-r border-black p-1">30 - 34</th>
-                      <th className="p-1">35 - 39</th>
+                    <tr className="text-[8px] font-medium">
+                      <th className="border border-black p-1 font-normal">Excellent</th>
+                      <th className="border border-black p-1 font-normal">Healthy</th>
+                      <th className="border border-black p-1 font-normal">Medium</th>
+                      <th className="border border-black p-1 font-normal">Obese</th>
+                      <th className="border border-black p-1 font-normal" style={{ background: '#ffff99' }}></th>
+                      <th className="border border-black p-1 font-normal">Excellent</th>
+                      <th className="border border-black p-1 font-normal">Healthy</th>
+                      <th className="border border-black p-1 font-normal">Medium</th>
+                      <th className="border border-black p-1 font-normal">Obese</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {bodyFatData.map((row, idx) => (
-                      <tr key={idx} className="border-b border-gray-400">
-                        <td className="border-r border-black p-1 text-center font-semibold bg-yellow-200">{row.age}</td>
-                        <td className="border-r border-black p-1 text-center bg-yellow-200">{row.women.excellent}</td>
-                        <td className="border-r border-black p-1 text-center">{row.women.healthy}</td>
-                        <td className="border-r border-black p-1 text-center">{row.women.medium}</td>
-                        <td className="border-r border-black p-1 text-center">{row.women.obese}</td>
-                        <td className="border-r border-black p-1 text-center bg-yellow-200">{row.men.excellent}</td>
-                        <td className="border-r border-black p-1 text-center">{row.men.healthy}</td>
-                        <td className="border-r border-black p-1 text-center">{row.men.medium}</td>
-                        <td className="p-1 text-center">{row.men.obese}</td>
-                      </tr>
-                    ))}
+                  <tbody className="font-medium">
+                    <tr>
+                      <td className="border border-black p-1">18.2</td>
+                      <td className="border border-black p-1">22.1</td>
+                      <td className="border border-black p-1">25.0</td>
+                      <td className="border border-black p-1">&gt; 29.6</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>20 - 24</td>
+                      <td className="border border-black p-1">10.8</td>
+                      <td className="border border-black p-1">14.9</td>
+                      <td className="border border-black p-1">19.0</td>
+                      <td className="border border-black p-1">&gt; 23.3</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">18.9</td>
+                      <td className="border border-black p-1">22.0</td>
+                      <td className="border border-black p-1">25.4</td>
+                      <td className="border border-black p-1">&gt; 29.8</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>25 - 29</td>
+                      <td className="border border-black p-1">12.8</td>
+                      <td className="border border-black p-1">16.5</td>
+                      <td className="border border-black p-1">20.3</td>
+                      <td className="border border-black p-1">&gt; 24.3</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">19.7</td>
+                      <td className="border border-black p-1">22.7</td>
+                      <td className="border border-black p-1">26.4</td>
+                      <td className="border border-black p-1">&gt; 30.5</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>30 - 34</td>
+                      <td className="border border-black p-1">14.5</td>
+                      <td className="border border-black p-1">18.0</td>
+                      <td className="border border-black p-1">21.5</td>
+                      <td className="border border-black p-1">&gt; 25.2</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">21.1</td>
+                      <td className="border border-black p-1">24.0</td>
+                      <td className="border border-black p-1">27.7</td>
+                      <td className="border border-black p-1">&gt; 31.5</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>35 - 39</td>
+                      <td className="border border-black p-1">16.1</td>
+                      <td className="border border-black p-1">19.3</td>
+                      <td className="border border-black p-1">22.6</td>
+                      <td className="border border-black p-1">&gt; 26.1</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">22.6</td>
+                      <td className="border border-black p-1">25.6</td>
+                      <td className="border border-black p-1">29.3</td>
+                      <td className="border border-black p-1">&gt; 32.8</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>40 - 44</td>
+                      <td className="border border-black p-1">17.5</td>
+                      <td className="border border-black p-1">20.5</td>
+                      <td className="border border-black p-1">23.6</td>
+                      <td className="border border-black p-1">&gt; 26.9</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">24.3</td>
+                      <td className="border border-black p-1">27.3</td>
+                      <td className="border border-black p-1">30.9</td>
+                      <td className="border border-black p-1">&gt; 34.1</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>45 - 49</td>
+                      <td className="border border-black p-1">18.6</td>
+                      <td className="border border-black p-1">21.5</td>
+                      <td className="border border-black p-1">24.5</td>
+                      <td className="border border-black p-1">&gt; 27.6</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">25.2</td>
+                      <td className="border border-black p-1">28.2</td>
+                      <td className="border border-black p-1">31.8</td>
+                      <td className="border border-black p-1">&gt; 35.1</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>50 - 54</td>
+                      <td className="border border-black p-1">19.2</td>
+                      <td className="border border-black p-1">22.1</td>
+                      <td className="border border-black p-1">25.1</td>
+                      <td className="border border-black p-1">&gt; 28.2</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">26.6</td>
+                      <td className="border border-black p-1">29.7</td>
+                      <td className="border border-black p-1">33.1</td>
+                      <td className="border border-black p-1">&gt; 36.2</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>55 - 59</td>
+                      <td className="border border-black p-1">19.8</td>
+                      <td className="border border-black p-1">22.7</td>
+                      <td className="border border-black p-1">25.6</td>
+                      <td className="border border-black p-1">&gt; 28.7</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-black p-1">27.4</td>
+                      <td className="border border-black p-1">30.7</td>
+                      <td className="border border-black p-1">34.0</td>
+                      <td className="border border-black p-1">&gt; 37.3</td>
+                      <td className="border border-black p-1" style={{ background: '#ffff99' }}>60 +</td>
+                      <td className="border border-black p-1">20.2</td>
+                      <td className="border border-black p-1">23.3</td>
+                      <td className="border border-black p-1">26.2</td>
+                      <td className="border border-black p-1">&gt; 29.3</td>
+                    </tr>
                   </tbody>
                 </table>
                 
                 <div className="p-2 text-xs">
                   <p className="mb-1 leading-tight">For Sports people (measured in athletic modus) with a minimum training from 10 hours a week the Index is valid: Women 11 to 18 % / Men: 5 to 15%</p>
-                  <p className="text-xs italic mb-2">(University of Cambridge, 1999)</p>
-                  <div className="flex justify-end gap-2">
-                    <div className="flex flex-col items-center">
-                      <span className="font-bold">-</span>
-                      <span className="border border-black px-3 py-1 text-xs">Under</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <span className="font-bold">0</span>
-                      <span className="border border-black px-3 py-1 text-xs">Healthy</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <span className="font-bold">+</span>
-                      <span className="border border-black px-3 py-1 text-xs">Over</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <span className="font-bold">++</span>
-                      <span className="border border-black px-3 py-1 text-xs">Obese</span>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <p className="text-xs italic">(University of Cambridge, 1999)</p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold">-</span>
+                        <span className="border border-black px-3 py-1 text-xs">Under</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold">0</span>
+                        <span className="border border-black px-3 py-1 text-xs">Healthy</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold">+</span>
+                        <span className="border border-black px-3 py-1 text-xs">Over</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold">++</span>
+                        <span className="border border-black px-3 py-1 text-xs">Obese</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -250,37 +344,49 @@ const WellnessForm = () => {
 
               {/* Water Index */}
               <div className="border-2 border-black mb-3">
-                <div className="bg-gray-200 p-2 font-bold flex items-center gap-2 text-sm">
+                <div className="p-2 flex items-center gap-2 text-sm font-normal">
                   <img src={bodyWaterRangeIcon} alt="Body water range" className="h-9 w-9 object-contain" />
-                  <span>Water Index:</span>
+                  <span className="font-bold">Water Index:</span>
                 </div>
-                <div className="p-3">
-                  <div className="flex justify-between text-xs mb-1 font-semibold">
+                <div className="p-3 text-[10px]">
+                  <div className="flex justify-between mb-1 font-semibold text-[9px] pl-[68px]">
                     <span>30%</span><span>40%</span><span>50%</span><span>60%</span><span>70%</span><span>80%</span><span>90%</span>
                   </div>
-                  <div className="text-xs mb-1 font-semibold">WHO 2001</div>
-                  <div className="mb-2">
-                    <div className="font-bold text-xs mb-1">Women</div>
-                    <div className="flex h-4 border border-black">
-                      <div className="w-full bg-gradient-to-r from-blue-100 via-blue-300 to-blue-500 relative">
-                        <div className="absolute" style={{left: '55%', width: '10%', height: '100%', backgroundColor: 'black'}}></div>
-                      </div>
+                  <div className="mb-1 text-[8px] text-[#0b2d5c] font-bold">WHO 2001</div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-[60px] font-semibold">Women</div>
+                    <div className="relative h-[10px] flex-1 border border-gray-300">
+                      <div
+                        className="h-full w-full"
+                        style={{
+                          background: "repeating-linear-gradient(90deg, #99ccff, #99ccff 2px, #fff 2px, #fff 4px)"
+                        }}
+                      />
+                      <div className="absolute top-0 h-full bg-black" style={{ left: '33.33%', width: '6.67%' }} />
                     </div>
                   </div>
-                  <div className="mb-2">
-                    <div className="font-bold text-xs mb-1">Men</div>
-                    <div className="flex h-4 border border-black">
-                      <div className="w-full bg-gradient-to-r from-blue-100 via-blue-300 to-blue-500 relative">
-                        <div className="absolute" style={{left: '58%', width: '10%', height: '100%', backgroundColor: 'black'}}></div>
-                      </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-[60px] font-semibold">Men</div>
+                    <div className="relative h-[10px] flex-1 border border-gray-300">
+                      <div
+                        className="h-full w-full"
+                        style={{
+                          background: "repeating-linear-gradient(90deg, #99ccff, #99ccff 2px, #fff 2px, #fff 4px)"
+                        }}
+                      />
+                      <div className="absolute top-0 h-full bg-black" style={{ left: '50%', width: '8.33%' }} />
                     </div>
                   </div>
-                  <div>
-                    <div className="font-bold text-xs mb-1">Children</div>
-                    <div className="flex h-4 border border-black">
-                      <div className="w-full bg-gradient-to-r from-blue-100 via-blue-300 to-blue-500 relative">
-                        <div className="absolute" style={{left: '65%', width: '15%', height: '100%', backgroundColor: 'black'}}></div>
-                      </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-[60px] font-semibold">Children</div>
+                    <div className="relative h-[10px] flex-1 border border-gray-300">
+                      <div
+                        className="h-full w-full"
+                        style={{
+                          background: "repeating-linear-gradient(90deg, #99ccff, #99ccff 2px, #fff 2px, #fff 4px)"
+                        }}
+                      />
+                      <div className="absolute top-0 h-full bg-black" style={{ left: '58.33%', width: '16.67%' }} />
                     </div>
                   </div>
                 </div>
@@ -288,9 +394,9 @@ const WellnessForm = () => {
 
                             {/* Muscle Index */}
               <div className="border-2 border-black">
-                <div className="bg-gray-200 p-2 font-bold flex items-center gap-2 text-sm">
+                <div className="p-2 flex items-center gap-2 text-sm font-normal">
                   <img src={muscleMassIcon} alt="Muscle mass" className="h-9 w-9 object-contain" />
-                  <span>Muscle Index & Physique Ratings:</span>
+                  <span className="font-bold">Muscle Index & Physique Ratings:</span>
                 </div>
                 <div className="p-3 text-xs muscle-section">
                   <p className="mb-2">The Muscle Index is given in Kg, the value belonging to it is the Physique Ratings:</p>
@@ -300,23 +406,23 @@ const WellnessForm = () => {
                         <div style={{ borderBottom: '1px solid #000', marginBottom: '2px' }}>Obese, Untrained</div>
                         1 Hidden Obese<br/>
                         2 Obese<br/>
-                        3 Solidly-built
+                        <span style={{ color: '#b35a00' }}>3 Solidly-built</span>
                       </div>
                       <div className="col-green">
-                        <div style={{ borderBottom: '1px solid #000', marginBottom: '2px' }}>Normal</div>
-                        4 Under exercised<br/>
+                        <div style={{ borderBottom: '1px solid #000', marginBottom: '2px', color: '#a00' }}>Normal</div>
+                        <span style={{ color: '#e6c600' }}>4 Under Exercised</span><br/>
                         5 Standard<br/>
-                        6 Standard Muscular
+                        <span style={{ color: '#1f7a1f' }}>6 Standard Muscular</span>
                       </div>
                       <div className="col-black" style={{ color: '#a00' }}>
                         <div style={{ borderBottom: '1px solid #000', marginBottom: '2px' }}>Excellent</div>
-                        7 Thin<br/>
-                        8 Thin & muscular<br/>
-                        9 Very muscular
+                        <span style={{ color: '#1f7a1f' }}>7 Thin</span><br/>
+                        <span style={{ color: '#1f7a1f' }}>8 Thin & Muscular</span><br/>
+                        <span style={{ color: '#0f5a0f' }}>9 Very Muscular</span>
                       </div>
                     </div>
                   </div>
-                  <div style={{ fontSize: '9px', textAlign: 'justify' }}>
+                  <div style={{ fontSize: '11px', textAlign: 'justify' }}>
                     <strong>Why is monitoring Muscle Mass important?</strong> For every extra Kg of muscle gained the body uses approximately 100 extra calories a day. Everybody who experiences a change in the muscle mass should monitor and adapt the calorie intake accordingly. Because muscle is denser than fat, monitoring your muscle mass gives you a more accurate understanding of your overall body compositions and changes in your total body weight.
                   </div>
                 </div>
@@ -441,38 +547,48 @@ const WellnessForm = () => {
 
             {/* Right Column - Cover Page */}
             <div className="relative h-full">
-              <div className="absolute inset-0 bg-gradient-to-b from-green-300 via-green-400 to-green-600">
+              <div className="absolute inset-0 bg-white">
                 <div className="flex flex-col h-full">
                   <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
-                      <h1 className="text-5xl font-bold mb-2">PERSONAL</h1>
-                      <h2 className="text-6xl font-bold">WELLNESS PASS</h2>
+                      <img src={wellnessLogo} alt="Herbalife logo" className="mx-auto mb-3" />
+                      <h1 className="text-5xl font-bold mb-2 text-[#2f4f1f]">PERSONAL</h1>
+                      <h2 className="text-6xl font-bold text-[#2f4f1f]">WELLNESS PASS</h2>
                     </div>
                   </div>
                   
-                  <div className="bg-white bg-opacity-90 p-6 m-8">
+                  <div className="bg-white/95 p-6 m-8">
                     <div className="mb-6">
                       <label className="block font-bold mb-2">Date:</label>
-                      <input 
-                        type="text" 
-                        className="w-full border-b-2 border-black p-2"
-                        value={page2Data.date}
-                        onChange={(e) => setPage2Data({...page2Data, date: e.target.value})}
-                        placeholder="____/____/____"
-                      />
+                      <div className="flex items-center gap-3">
+                        <input 
+                          type="text" 
+                          className="flex-1 border-b-2 border-[#2f4f1f] p-2"
+                          value={page2Data.date}
+                          onChange={(e) => setPage2Data({...page2Data, date: e.target.value})}
+                          placeholder="DD-MONTH-YYYY"
+                        />
+                        <button
+                          type="button"
+                          onClick={setTodayDate}
+                          className="border-2 border-[#2f4f1f] text-[#2f4f1f] px-3 py-2 text-xs font-bold uppercase tracking-wide hover:bg-[#e7edd5]"
+                        >
+                          Today
+                        </button>
+                      </div>
                     </div>
                     
                     <div className="mb-6">
                       <label className="block font-bold mb-2">Name</label>
                       <input 
                         type="text" 
-                        className="w-full border-b-2 border-black p-2"
+                        className="w-full border-b-2 border-[#2f4f1f] p-2"
                         value={page2Data.name}
                         onChange={(e) => setPage2Data({...page2Data, name: e.target.value})}
                       />
                     </div>
                     
-                    <div className="border-2 border-black p-4 text-center">
+                    <div className="border-2 border-[#2f4f1f] p-4 text-center">
                       <label className="block font-bold mb-2">Your Personal Wellness Coach</label>
                       <input 
                         type="text" 
