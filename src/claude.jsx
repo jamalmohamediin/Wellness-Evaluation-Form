@@ -177,8 +177,69 @@ const WellnessForm = () => {
     });
   };
 
+  const toTitleCase = (value) =>
+    value
+      .toLowerCase()
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0].toUpperCase() + part.slice(1))
+      .join(" ");
+
+  const formatDateForFilename = (value) => {
+    if (!value) return "";
+    const trimmed = value.trim();
+    if (!trimmed) return "";
+
+    const dashMatch = trimmed.match(/^(\d{2})-([A-Za-z]+)-(\d{4})$/);
+    if (dashMatch) {
+      const [, day, month, year] = dashMatch;
+      return `${day}-${toTitleCase(month)} ${year}`;
+    }
+
+    const slashMatch = trimmed.match(/^(\d{2})[\/.-](\d{2})[\/.-](\d{4})$/);
+    if (slashMatch) {
+      const [, day, month, year] = slashMatch;
+      const monthName = toTitleCase(
+        new Date(Number(year), Number(month) - 1, 1).toLocaleString("en-US", { month: "long" })
+      );
+      return `${day}-${monthName} ${year}`;
+    }
+
+    return trimmed.replace(/\s+/g, " ");
+  };
+
+  const buildPdfTitle = () => {
+    const name = page2Data.name.trim();
+    const coach = page2Data.coach.trim();
+    const date = formatDateForFilename(page2Data.date);
+    const parts = [];
+    if (name) parts.push(name);
+    if (date) parts.push(date);
+    if (coach) parts.push(`Coach ${coach}`);
+    const title = parts.length ? parts.join(" ") : "Personal Wellness Pass";
+    return title.replace(/[\\/:*?"<>|]+/g, " ").replace(/\s+/g, " ").trim();
+  };
+
   const exportToPDF = () => {
-    window.print();
+    const originalTitle = document.title;
+    const nextTitle = buildPdfTitle();
+    const appliedTitle = nextTitle || originalTitle;
+    document.title = appliedTitle;
+    const titleEl = document.querySelector("title");
+    if (titleEl) titleEl.textContent = appliedTitle;
+
+    const handleAfterPrint = () => {
+      document.title = originalTitle;
+      if (titleEl) titleEl.textContent = originalTitle;
+      window.removeEventListener("afterprint", handleAfterPrint);
+    };
+
+    window.addEventListener("afterprint", handleAfterPrint);
+    setTimeout(() => {
+      window.print();
+      // Fallback in case afterprint doesn't fire on some browsers.
+      setTimeout(handleAfterPrint, 2000);
+    }, 0);
   };
 
   const formatDateToDisplay = (date) => {
@@ -228,9 +289,9 @@ const WellnessForm = () => {
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto bg-white shadow-lg page-break">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="p-4 text-xs leading-relaxed">
+      <div className="max-w-7xl mx-auto bg-white shadow-lg page-break print-section">
+        <div className="grid grid-cols-1 lg:grid-cols-2 print-split">
+          <div className="p-4 text-xs leading-relaxed order-2 lg:order-2 print-col print-break tight-print">
             <div className="mb-4 space-y-3">
               <div className="grid grid-cols-[40px_1fr] gap-3 items-center">
                 <div className="flex justify-center">
@@ -297,7 +358,7 @@ const WellnessForm = () => {
 
               <div className="grid grid-cols-[40px_1fr] gap-3 items-start">
                 <div />
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto print-fit-table phone-fit-table">
                   <table className="w-full min-w-[360px] border-2 border-black text-xs mb-2">
                     <thead>
                       <tr className="bg-yellow-200">
@@ -350,7 +411,7 @@ const WellnessForm = () => {
                     <div className="text-[#b35a00]">Healthy</div>
                     <div className="text-[#e6c600]">9-12</div>
                     <div className="text-[#e6c600]">Bad</div>
-                    <div className="text-[#a00]">over 13</div>
+                    <div className="text-[#a00]">Over 13</div>
                     <div className="text-[#a00]">Alarming</div>
                   </div>
                 </div>
@@ -368,8 +429,8 @@ const WellnessForm = () => {
             </div>
           </div>
 
-          <div className="relative h-full">
-            <div className="absolute inset-0 bg-white">
+          <div className="relative h-full order-1 lg:order-1 print-col print-break cover-shell">
+            <div className="absolute inset-0 bg-white cover-layer">
               <div className="flex flex-col h-full">
                 <div className="flex-1 flex items-center justify-center p-6">
                   <div className="text-center">
@@ -426,15 +487,15 @@ const WellnessForm = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto bg-white shadow-lg p-4 sm:p-6 page-break">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-stretch">
-          <div className="border-2 border-black flex flex-col h-full">
+      <div className="max-w-7xl mx-auto bg-white shadow-lg p-4 sm:p-6 page-break print-section">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-stretch print-split">
+          <div className="border-2 border-black flex flex-col h-full order-2 xl:order-2 print-col">
             <div className="border-b-2 border-black p-2 font-bold text-center text-sm">
               Please bring along this Pass to your next appointment
             </div>
 
-            <div className="overflow-x-auto xl:overflow-x-visible">
-              <div className="min-w-[880px] xl:min-w-0">
+            <div className="overflow-x-auto xl:overflow-x-visible print-fit-table phone-fit-table">
+              <div className="min-w-[880px] xl:min-w-0 print-min-w-0 phone-fit-inner">
                 <div className="grid grid-cols-11 text-xs border-b border-black">
                   <div className="border-r border-black p-1 text-center font-semibold">Age:</div>
                   <div className="border-r border-black p-1 text-center">Height<br/>cm</div>
@@ -592,14 +653,14 @@ const WellnessForm = () => {
             </div>
           </div>
 
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full order-1 xl:order-1 print-col print-break">
             <div className="border-2 border-black mb-3">
               <div className="p-2 flex items-center gap-2 text-sm font-normal">
                 <img src={bodyFatRangeIcon} alt="Body fat range" className="h-9 w-9 object-contain" />
                 <span className="font-bold">Body Fat Range:</span>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto print-fit-table phone-fit-table">
                 <table className="w-full min-w-[520px] text-[9px] border-collapse text-center mb-2">
                   <thead>
                     <tr className="font-bold" style={{ background: "#ffff99" }}>
@@ -849,12 +910,101 @@ const WellnessForm = () => {
           overflow: visible;
         }
         @media print {
-          .page-break {
+          @page {
+            size: portrait;
+            margin: 10mm;
+          }
+          .print-split {
+            display: flex !important;
+            flex-direction: column;
+          }
+          .print-col {
+            width: 100% !important;
+          }
+          .print-break {
+            break-after: page;
             page-break-after: always;
+          }
+          .page-break {
+            break-after: auto;
+            page-break-after: auto;
           }
           body {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
+          }
+          .print-fit-table {
+            overflow: visible !important;
+          }
+          .print-min-w-0 {
+            min-width: 0 !important;
+          }
+        }
+        @media print and (orientation: landscape) {
+          @page {
+            size: landscape;
+            margin: 8mm;
+          }
+          .print-split {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+          }
+          .print-break {
+            break-after: auto;
+            page-break-after: auto;
+          }
+        }
+        .tight-print {
+          line-height: 1.2;
+        }
+        .tight-print .mb-4 {
+          margin-bottom: 8px;
+        }
+        .tight-print .mb-3 {
+          margin-bottom: 6px;
+        }
+        .tight-print .mb-2 {
+          margin-bottom: 4px;
+        }
+        @media (max-width: 1023px) {
+          .print-split {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+          .print-col {
+            width: 100%;
+          }
+          .print-break {
+            margin-bottom: 16px;
+          }
+          .cover-shell {
+            height: auto;
+          }
+          .cover-layer {
+            position: static;
+          }
+          .phone-fit-table {
+            overflow: visible;
+          }
+          .phone-fit-table table {
+            min-width: 0;
+            width: 100%;
+            font-size: 9px;
+          }
+          .phone-fit-inner {
+            min-width: 0;
+            width: 100%;
+          }
+          .phone-fit-inner .grid {
+            grid-template-columns: repeat(11, minmax(0, 1fr));
+          }
+          .phone-fit-inner .grid > div,
+          .phone-fit-inner input {
+            font-size: 9px;
+            padding: 2px;
+            line-height: 1.2;
           }
         }
         .muscle-section { font-size: 10px; line-height: 1.3; }
@@ -871,7 +1021,45 @@ const WellnessForm = () => {
         .bg-medium { background: #ff9966; }
         .bg-bad { background: #ff6666; }
         .bg-alarming { background: #cc0000; color: white; }
+        .eval-table input[type="radio"],
+        .eval-table input[type="checkbox"] {
+          accent-color: #000;
+        }
       `}</style>
+
+      <div className="flex flex-wrap justify-center gap-3 p-4 print:hidden">
+        <button
+          onClick={() => dispatch({ type: "UNDO" })}
+          disabled={!canUndo}
+          className={`px-4 py-2 rounded border text-sm font-semibold ${
+            canUndo ? "bg-white hover:bg-gray-100" : "bg-gray-200 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          Undo
+        </button>
+        <button
+          onClick={() => dispatch({ type: "REDO" })}
+          disabled={!canRedo}
+          className={`px-4 py-2 rounded border text-sm font-semibold ${
+            canRedo ? "bg-white hover:bg-gray-100" : "bg-gray-200 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          Redo
+        </button>
+        <button
+          onClick={() => dispatch({ type: "CLEAR" })}
+          className="px-4 py-2 rounded border text-sm font-semibold bg-white hover:bg-gray-100"
+        >
+          Clear All
+        </button>
+        <button
+          onClick={exportToPDF}
+          className="bg-[#2f4f1f] text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-[#243c18]"
+        >
+          <Download size={20} />
+          Export as PDF
+        </button>
+      </div>
     </div>
   );
 };
